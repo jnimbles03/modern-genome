@@ -1,0 +1,16 @@
+pymupdf>=1.23.8
+pdfplumber>=0.11.0
+pillow>=10.4.0
+pyhanko>=0.19.0
+flask>=3.0.0
+requests>=2.32.3
+beautifulsoup4>=4.12.3
+flask-cors>=3.0.10
+PyPDF2>=3.0.0
+# The PyPDF2 library relies on the PyCryptodome package for decrypting
+# AES‑encrypted PDFs. Without this dependency, trying to read certain
+# documents (especially those protected with AES encryption) will raise
+# a `DependencyError` stating that PyCryptodome is required.  Adding
+# PyCryptodome ensures that encrypted documents can be processed without
+# crashing the application.
+pycryptodome>=3.19.1

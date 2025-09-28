@@ -1,0 +1,6 @@
+# Additional dependencies for Playwright support
+# Use a more recent version of Playwright so that its dependencies (like greenlet)
+# support Python 3.13. Version 1.55.0 (released Aug 28 2025) explicitly supports
+# Python 3.13 according to the PyPI classifiers【604975336260715†L70-L75】, so pin to
+# that version. If a newer version is available it may also work.
+playwright==1.55.0

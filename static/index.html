@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Genome Project</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MQLMLGPP2X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MQLMLGPP2X');
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #0a0a0a;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #ffffff;
+        }
+        
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .container {
+            position: relative;
+            margin: 40px auto;
+            z-index: 1;
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: white;
+            padding: 48px;
+            border-radius: 24px;
+            box-shadow: 
+                0 10px 40px rgba(16, 185, 129, 0.1),
+                0 0 80px rgba(16, 185, 129, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            max-width: 960px;
+            width: 90%;
+        }
+        
+        h1 {
+            margin: 0 0 12px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 36px;
+        }
+        
+        /* Method dropdown styling */
+        .input-method-selector {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .method-dropdown {
+            width: 100%;
+            max-width: 300px;
+            padding: 14px 20px;
+            padding-right: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255, 255, 255, 0.7)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+        }
+        
+        .method-dropdown:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+        }
+        
+        .method-dropdown:focus {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .method-dropdown option {
+            background: #1a1a1a;
+            color: white;
+            padding: 10px;
+        }
+        
+        /* Input Sections */
+        .input-section {
+            display: none;
+            margin-bottom: 32px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .input-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        input[type="file"] {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        
+        input[type="file"]:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Checkbox styling */
+        input[type="checkbox"], input[type="number"] {
+            accent-color: #10b981;
+        }
+        
+        input[type="number"] {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        
+        /* Button styling */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        button {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 4px 14px rgba(16, 185, 129, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 7px 20px rgba(16, 185, 129, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        button:hover::before {
+            opacity: 1;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #clear-btn {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 4px 14px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        #clear-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 7px 20px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        #show-methodology-btn {
+            background: transparent;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: none;
+            color: rgba(16, 185, 129, 0.9);
+        }
+        
+        #show-methodology-btn:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.5);
+            color: white;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+        
+        /* Progress bar */
+        #progress-section {
+            display: none;
+            margin: 32px 0;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        #progress-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        
+        #loading-spinner {
+            display: none;
+            margin: 20px auto;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid #10b981;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Results styling */
+        #results {
+            margin-top: 40px;
+            display: none;
+        }
+        
+        .result-item {
+            margin-bottom: 24px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        .result-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(16, 185, 129, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .result-url {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            word-break: break-all;
+            flex-grow: 1;
+            margin-right: 16px;
+        }
+        
+        .result-status {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .status-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .status-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Summary stats */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(16, 185, 129, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge-yes {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .badge-no {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Download section */
+        #download-section {
+            margin-top: 32px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        #download-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .download-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .download-links a {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .download-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+            color: white;
+        }
+        
+        .dashboard-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+        
+        .dashboard-btn:hover {
+            box-shadow: 0 7px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Details/Summary styling */
+        details {
+            margin-top: 16px;
+        }
+        
+        summary {
+            cursor: pointer;
+            color: rgba(16, 185, 129, 0.8);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+        
+        summary:hover {
+            color: #10b981;
+        }
+        
+        .output {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Monaco', 'Courier New', monospace;
+            margin-top: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Helper text styling */
+        .helper-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        /* Modal styling */
+        #methodology-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            max-width: 900px;
+            width: 90%;
+            margin: 30px auto;
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.02) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(16, 185, 129, 0.1);
+            padding: 40px;
+            position: relative;
+            color: white;
+        }
+        
+        #close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        #close-modal:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        /* Crawl options styling */
+        .crawl-options {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+        
+        .crawl-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .crawl-options label:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="container">
+        <h1>Form Genome Project</h1>
+        <p class="subtitle">Analyze PDF forms for structure, signature requirements, and special conditions</p>
+        
+        <!-- Input Method Selection -->
+        <div class="input-method-selector">
+            <label for="input-method-dropdown" style="display: block; margin-bottom: 12px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); font-weight: 500;">Select Input Method:</label>
+            <select id="input-method-dropdown" class="method-dropdown">
+                <option value="crawl" selected>Crawl Website</option>
+                <option value="single">Single URL</option>
+                <option value="multiple">Multiple URLs</option>
+                <option value="file">Upload File</option>
+            </select>
+        </div>
+        
+        <!-- Single URL Input -->
+        <div id="single-input" class="input-section">
+            <input type="text" id="url-input" placeholder="https://www.fidelity.com/bin-public/060_www_fidelity_com/documents/customer-service/term-bene-change.pdf">
+        </div>
+        
+        <!-- Multiple URLs Input -->
+        <div id="multiple-input" class="input-section">
+            <textarea id="urls-textarea" placeholder="Enter comma-separated URLs:&#10;https://example.com/form1.pdf, https://example.com/form2.pdf&#10;&#10;Or one URL per line:&#10;https://example.com/form1.pdf&#10;https://example.com/form2.pdf"></textarea>
+        </div>
+        
+        <!-- File Upload Input -->
+        <div id="file-input" class="input-section">
+            <input type="file" id="file-upload-input" accept=".txt" />
+            <p class="helper-text">Upload a text file with one URL per line</p>
+        </div>
+        
+        <!-- Crawl URL Input -->
+        <div id="crawl-input" class="input-section active">
+            <input type="text" id="crawl-url-input" placeholder="https://www.example.com">
+            <div class="crawl-options">
+                <label>
+                    <input type="checkbox" id="crawl-subpages" checked>
+                    Include subpages
+                </label>
+                <label>
+                    Max Depth: <input type="number" id="max-depth" value="2" min="1" max="5" style="width: 60px; margin-left: 8px;">
+                </label>
+            </div>
+            <p class="helper-text">
+                Crawl a website to find and analyze all PDF forms. Automatically tries enhanced crawling if needed.
+                <br><span style="opacity: 0.7;">Respects robots.txt and includes rate limiting.</span>
+            </p>
+        </div>
+        
+        <div class="button-group">
+            <button id="analyze-btn">ANALYZE</button>
+            <button id="clear-btn">CLEAR</button>
+        </div>
+        
+        <div style="text-align: center;">
+            <button id="show-methodology-btn">VIEW SCORING METHODOLOGY</button>
+        </div>
+        
+        <!-- Progress Section -->
+        <div id="progress-section">
+            <div id="progress-text">Processing... (0/0)</div>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+        
+        <div id="loading-spinner"></div>
+        
+        <!-- Results Section -->
+        <div id="results">
+            <div id="batch-summary" style="display: none;">
+                <h3 style="margin-bottom: 20px; font-size: 1.5rem; font-weight: 600;">Batch Analysis Summary</h3>
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <div id="total-analyzed" class="stat-number">0</div>
+                        <div class="stat-label">URLs Analyzed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="total-successful" class="stat-number">0</div>
+                        <div class="stat-label">Successful</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="total-fields" class="stat-number">0</div>
+                        <div class="stat-label">Total Fields</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="total-signatures" class="stat-number">0</div>
+                        <div class="stat-label">Total Signatures</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="results-container"></div>
+            
+            <div id="download-section" style="display: none;">
+                <h3>Download Results</h3>
+                <div class="download-links">
+                    <a id="csv-download" href="#" download="form_analysis_batch.csv">Download CSV</a>
+                    <a id="json-download" href="#" download="form_analysis_batch.json">Download JSON</a>
+                    <a id="detailed-csv" href="#" download="form_analysis_detailed.csv">Detailed CSV</a>
+                    <a id="html-dashboard" href="#" class="dashboard-btn">Generate Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Methodology Modal -->
+    <div id="methodology-modal">
+        <div class="modal-content">
+            <button id="close-modal">×</button>
+            
+            <h2 style="font-size: 2rem; margin-bottom: 12px; font-weight: 600; text-align: center; background: linear-gradient(135deg, #ffffff 0%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Form Analyzer Indicators & Complexity Scoring</h2>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 32px; text-align: center; font-size: 1rem;">Understanding the signals we extract from forms and how we score their difficulty</p>
+            
+            <!-- Key Indicators Section -->
+            <div style="margin-bottom: 40px;">
+                <h3 style="color: #10b981; font-size: 1.4rem; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid rgba(16, 185, 129, 0.3);">Key Indicators & Their Meanings</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                    <!-- Indicator Cards -->
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Required Fields (REQ-001)</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-height: 1.5; margin-bottom: 8px;">Identifies fields that should be mandatory (e.g., SSN, DOB, account details) but are marked as optional. Missing required markings raises a high NIGO risk.</p>
+                        <span style="display: inline-block; padding: 4px 10px; background: rgba(239, 68, 68, 0.15); color: #ef4444; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">SEVERITY: HIGH</span>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Input Masks (FMT-001)</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5; margin-bottom: 8px;">Detects high-risk data fields lacking validation (no input mask or formatting checks). This includes SSN, routing or account numbers, and phone numbers.</p>
+                        <span style="display: inline-block; padding: 4px 10px; background: rgba(251, 191, 36, 0.15); color: #fbbf24; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">SEVERITY: MEDIUM</span>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Signature Date Missing (SIG-002)</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5; margin-bottom: 8px;">Warns when a signature line lacks an adjacent date field. Missing dates can delay processing and trigger follow-up.</p>
+                        <span style="display: inline-block; padding: 4px 10px; background: rgba(16, 185, 129, 0.15); color: #10b981; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">SEVERITY: LOW</span>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Conditional Logic Missing (COND-003)</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5; margin-bottom: 8px;">Marks sections referencing beneficiaries or dependents without visible logic to control follow-on questions.</p>
+                        <span style="display: inline-block; padding: 4px 10px; background: rgba(251, 191, 36, 0.15); color: #fbbf24; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">SEVERITY: MEDIUM</span>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Role Unspecified (ROLE-001)</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5; margin-bottom: 8px;">Flags signature fields without a labelled role (Applicant, Co-owner, Notary, etc.). Adding role labels reduces confusion and NIGO risk.</p>
+                        <span style="display: inline-block; padding: 4px 10px; background: rgba(251, 191, 36, 0.15); color: #fbbf24; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">SEVERITY: MEDIUM</span>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Third-Party Coordination (THRD-001)</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5; margin-bottom: 8px;">Highlights when additional parties (Physician, Attorney, Financial Advisor, Guardian) must sign or approve.</p>
+                        <span style="display: inline-block; padding: 4px 10px; background: rgba(251, 191, 36, 0.15); color: #fbbf24; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">SEVERITY: MEDIUM</span>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Attachment Requirements</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Looks for text like "attach," "include copy," or mentions of supporting documents. Required attachments add to overall complexity and NIGO risk.</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Signatures & Notarization</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Counts signature fields and identifies witness and notary requirements. Witness signatures and notarization materially increase form difficulty.</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">JavaScript / Conditional Logic</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Detects embedded JavaScript or multistep logic. Complex logic (branching questions, dynamic sections) signals high cognitive load for signers.</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Radio Groups</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Counts sets of radio buttons. Multiple radio groups indicate branching choices that may confuse signers and increase complexity.</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">PII Collection</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Scans for sensitive personal data (SSN, DOB, TIN, EIN, account and routing numbers, address, email, phone). Each type of PII adds to the complexity score.</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Graphics & Layout</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Measures drawings and images per page and text density. Many diagrams or busy pages increase cognitive load and the complexity score.</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Deadlines & Dependencies</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Extracts deadline mentions ("submit within 30 days") and references to other forms. Each deadline or dependency slightly raises complexity.</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #10b981; margin: 0 0 12px; font-size: 1rem;">Domain Mismatch</h4>
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; line-length: 1.5;">Checks whether the hosting domain differs from the issuer/brand. Mismatched domains can signal phishing or confusion and add modest complexity.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Complexity Score Table -->
+            <div>
+                <h3 style="color: #10b981; font-size: 1.4rem; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid rgba(16, 185, 129, 0.3);">Complexity Score Inputs & Weights</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">How the overall complexity score is computed (capped at 100)</p>
+                
+                <div style="background: rgba(255, 255, 255, 0.03); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));">
+                                <th style="padding: 12px; text-align: left; color: #10b981; font-weight: 600; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">Factor</th>
+                                <th style="padding: 12px; text-align: left; color: #10b981; font-weight: 600; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">Weight / Contribution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Page count</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+2 points per page (max 10)</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Total fields</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+0.3 points per field (max 15)</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">At least one signature</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+4 points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Witness signature</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+10 points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Notarized form</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+12 points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Mentions "attach"</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+3 points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Attachment requirements</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+2 points per item (min 2, max 8)</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">JavaScript present</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+4 points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">JS with ≥2 radio groups</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+3 additional points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Unique signer roles</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+3 points each (max 18)</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Third-party roles</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">1 role: +4; 2 roles: +8; 3+: +12. Roles such as Physician, Attorney, or Financial Advisor add +4.</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">PII collected</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">SSN & account & routing: +3 each; DOB & TIN & EIN: +2 each; Address/Email/Phone: +1 each</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Radio groups</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+2 + (#groups) points (max 6)</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Drawings per page</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">≥30: +4; 15-29: +3; 5-14: +1</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Images per page</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">≥2: +3; 1-1.99: +1</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">XFA hint</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+4 points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Deadlines</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">At least one mention: +2 points</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Dependencies</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">1 reference: +1; 2+ references: +3</td></tr>
+                            <tr><td style="padding: 10px; color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">Domain mismatch</td><td style="padding: 10px; color: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">+2 points</td></tr>
+                            <tr style="background: rgba(16, 185, 129, 0.1);"><td style="padding: 12px; color: #10b981; font-weight: 600;">Total score</td><td style="padding: 12px; color: #10b981; font-weight: 600;">All contributions summed and capped at 100</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p style="color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; margin-top: 16px; line-length: 1.5;">Indicators labelled by rule IDs (e.g., REQ-001) correspond to NIGO checks defined in the Form Analyzer. Severity categories influence NIGO risk but not the complexity score directly.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Orbs Background Animation (keeping original) -->
+    <script>
+    // Floating Orbs Background Animation - Deployment-friendly version
+    window.addEventListener('load', function() {
+        try {
+            // Get canvas element
+            const canvas = document.getElementById('canvas');
+            if (!canvas) {
+                console.error('Canvas element not found');
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.error('Could not get 2d context from canvas');
+                return;
+            }
+            
+            // Set canvas size
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            
+            // Orb class - simplified for reliability
+            class Orb {
+                constructor() {
+                    this.radius = Math.random() * 15 + 8;
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = Math.random() * 0.7 - 0.35;
+                    this.vy = Math.random() * 0.7 - 0.35;
+                    this.alpha = Math.random() * 0.4 + 0.3;
+                }
+                
+                update(orbs) {
+                    // Move
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    // Bounce off edges
+                    if (this.x < this.radius) {
+                        this.x = this.radius;
+                        this.vx = Math.abs(this.vx);
+                    } else if (this.x > canvas.width - this.radius) {
+                        this.x = canvas.width - this.radius;
+                        this.vx = -Math.abs(this.vx);
+                    }
+                    
+                    if (this.y < this.radius) {
+                        this.y = this.radius;
+                        this.vy = Math.abs(this.vy);
+                    } else if (this.y > canvas.height - this.radius) {
+                        this.y = canvas.height - this.radius;
+                        this.vy = -Math.abs(this.vy);
+                    }
+                    
+                    // Simplified collision detection
+                    for (let i = 0; i < orbs.length; i++) {
+                        const other = orbs[i];
+                        if (other === this) continue;
+                        
+                        const dx = other.x - this.x;
+                        const dy = other.y - this.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        const minDistance = this.radius + other.radius;
+                        
+                        if (distance < minDistance) {
+                            // Exchange velocities
+                            const tempVx = this.vx;
+                            const tempVy = this.vy;
+                            this.vx = other.vx;
+                            this.vy = other.vy;
+                            other.vx = tempVx;
+                            other.vy = tempVy;
+                            
+                            // Prevent overlap
+                            const angle = Math.atan2(dy, dx);
+                            const overlap = minDistance - distance;
+                            if (overlap > 0) {
+                                this.x -= (overlap/2) * Math.cos(angle);
+                                this.y -= (overlap/2) * Math.sin(angle);
+                                other.x += (overlap/2) * Math.cos(angle);
+                                other.y += (overlap/2) * Math.sin(angle);
+                            }
+                        }
+                    }
+                }
+                
+                draw() {
+                    if (!ctx) return;
+                    
+                    try {
+                        // Draw glow
+                        ctx.beginPath();
+                        const outerGlow = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 1.5);
+                        outerGlow.addColorStop(0, `rgba(18, 161, 49, 0.2)`);
+                        outerGlow.addColorStop(1, `rgba(18, 161, 49, 0)`);
+                        ctx.fillStyle = outerGlow;
+                        ctx.arc(this.x, this.y, this.radius * 1.5, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Draw orb
+                        ctx.beginPath();
+                        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+                        gradient.addColorStop(0, `rgba(18, 161, 49, ${this.alpha + 0.2})`);
+                        gradient.addColorStop(0.7, `rgba(18, 161, 49, ${this.alpha})`);
+                        gradient.addColorStop(1, `rgba(18, 161, 49, ${this.alpha * 0.5})`);
+                        ctx.fillStyle = gradient;
+                        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Add highlight
+                        ctx.beginPath();
+                        ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.2, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 255, 0.15)`;
+                        ctx.fill();
+                    } catch (e) {
+                        console.error('Error drawing orb:', e);
+                    }
+                }
+            }
+            
+            // Create orbs - fewer for better performance
+            const orbs = [];
+            const orbCount = Math.min(window.innerWidth / 25, 60); 
+            
+            for (let i = 0; i < orbCount; i++) {
+                orbs.push(new Orb());
+            }
+            
+            // Animation loop
+            function animate() {
+                if (!ctx) return;
+                
+                try {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Update and draw orbs
+                    for (let i = 0; i < orbs.length; i++) {
+                        orbs[i].update(orbs);
+                        orbs[i].draw();
+                    }
+                    
+                    // Draw connections
+                    for (let i = 0; i < orbs.length; i++) {
+                        for (let j = i + 1; j < orbs.length; j++) {
+                            const dx = orbs[i].x - orbs[j].x;
+                            const dy = orbs[i].y - orbs[j].y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            
+                            if (distance < 120) {
+                                const alpha = 0.1 * (1 - distance / 120);
+                                ctx.beginPath();
+                                ctx.strokeStyle = `rgba(18, 161, 49, ${alpha})`;
+                                ctx.lineWidth = 1.5;
+                                ctx.moveTo(orbs[i].x, orbs[i].y);
+                                ctx.lineTo(orbs[j].x, orbs[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                    
+                    requestAnimationFrame(animate);
+                } catch (e) {
+                    console.error('Animation error:', e);
+                }
+            }
+            
+            // Start animation
+            animate();
+            
+            // Handle resize
+            window.addEventListener('resize', resizeCanvas);
+            
+            console.log('Orb animation initialized successfully');
+        } catch (e) {
+            console.error('Failed to initialize orb animation:', e);
+        }
+    });
+    </script>
+
+    <!-- Modal functionality script -->
+    <script>
+    // Add event listener to ensure the DOM is fully loaded before attaching handlers
+    window.addEventListener('load', function() {
+        try {
+            // Get modal elements
+            var methodologyBtn = document.getElementById('show-methodology-btn');
+            var methodologyModal = document.getElementById('methodology-modal');
+            var closeModalBtn = document.getElementById('close-modal');
+            
+            if (!methodologyBtn || !methodologyModal || !closeModalBtn) {
+                console.error('Modal elements not found:', 
+                    {button: !!methodologyBtn, modal: !!methodologyModal, closeBtn: !!closeModalBtn});
+                return;
+            }
+            
+            // Show modal when button is clicked
+            methodologyBtn.addEventListener('click', function() {
+                console.log('Methodology button clicked');
+                methodologyModal.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            });
+            
+            // Close modal when close button is clicked
+            closeModalBtn.addEventListener('click', function() {
+                methodologyModal.style.display = 'none';
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+            });
+            
+            // Close modal when clicking outside of it
+            window.addEventListener('click', function(event) {
+                if (event.target == methodologyModal) {
+                    methodologyModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            console.log('Modal functionality initialized successfully');
+        } catch (e) {
+            console.error('Failed to initialize modal functionality:', e);
+        }
+    });
+    </script>
+
+    <!-- Frontend logic (keeping all the original functionality) -->
+    <script>
+    window.addEventListener('load', function() {
+        try {
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const urlInput = document.getElementById('url-input');
+            const urlsTextarea = document.getElementById('urls-textarea');
+            const fileUploadInput = document.getElementById('file-upload-input');
+            const crawlUrlInput = document.getElementById('crawl-url-input');
+            const crawlSubpages = document.getElementById('crawl-subpages');
+            const maxDepth = document.getElementById('max-depth');
+            const resultsDiv = document.getElementById('results');
+            const resultsContainer = document.getElementById('results-container');
+            const progressSection = document.getElementById('progress-section');
+            const progressText = document.getElementById('progress-text');
+            const progressFill = document.getElementById('progress-fill');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const batchSummary = document.getElementById('batch-summary');
+            const downloadSection = document.getElementById('download-section');
+            const methodDropdown = document.getElementById('input-method-dropdown');
+
+            // Add event listener for the dashboard button
+            document.getElementById('html-dashboard').addEventListener('click', function(event) {
+                event.preventDefault();
+                generateDashboard();
+            });
+
+            // Input method switching
+            const inputSections = document.querySelectorAll('.input-section');
+
+            methodDropdown.addEventListener('change', function() {
+                // Hide all input sections
+                inputSections.forEach(section => section.classList.remove('active'));
+                
+                // Show the selected section
+                const sectionMap = {
+                    'single': 'single-input',
+                    'multiple': 'multiple-input', 
+                    'file': 'file-input',
+                    'crawl': 'crawl-input'
+                };
+                document.getElementById(sectionMap[this.value]).classList.add('active');
+            });
+
+            let allResults = [];
+
+            // Clear functionality
+            clearBtn.addEventListener('click', () => {
+                urlInput.value = '';
+                urlsTextarea.value = '';
+                fileUploadInput.value = '';
+                crawlUrlInput.value = '';
+                resultsDiv.style.display = 'none';
+                progressSection.style.display = 'none';
+                allResults = [];
+            });
+            
+            // Main analyze function
+            analyzeBtn.addEventListener('click', async () => {
+                const selectedMethod = methodDropdown.value;
+                let urls = [];
+
+                // Get URLs based on selected method
+                if (selectedMethod === 'single') {
+                    const url = urlInput.value.trim();
+                    if (!url) {
+                        alert('Please enter a PDF URL');
+                        return;
+                    }
+                    urls = [url];
+                } else if (selectedMethod === 'multiple') {
+                    const input = urlsTextarea.value.trim();
+                    if (!input) {
+                        alert('Please enter PDF URLs');
+                        return;
+                    }
+                    
+                    // Handle both comma-separated and line-separated URLs.
+                    // The original regex was split across lines, which caused a syntax error.
+                    // We combine comma and newline separators into a single regex without line breaks.
+                    urls = input.split(/[,\n]/)
+                        .map(url => url.trim())
+                        .filter(url => url.length > 0);
+                        
+                } else if (selectedMethod === 'file') {
+                    if (!fileUploadInput.files[0]) {
+                        alert('Please select a text file');
+                        return;
+                    }
+                    
+                    const file = fileUploadInput.files[0];
+                    const text = await file.text();
+                    urls = text.split('\n')
+                        .map(url => url.trim())
+                        .filter(url => url.length > 0);
+                } else if (selectedMethod === 'crawl') {
+                    const baseUrl = crawlUrlInput.value.trim();
+                    if (!baseUrl) {
+                        alert('Please enter a website URL to crawl');
+                        return;
+                    }
+                    
+                    // Show crawling status
+                    analyzeBtn.disabled = true;
+                    analyzeBtn.textContent = 'CRAWLING...';
+                    progressSection.style.display = 'block';
+                    progressText.textContent = 'Finding PDF forms on website...';
+                    
+                    try {
+                        urls = await crawlForPDFs(baseUrl);
+                        if (urls.length === 0) {
+                            alert('No PDF files found on this website using both standard and JavaScript-enhanced crawling methods. The site may not have any PDF forms, or they may be behind authentication.');
+                            analyzeBtn.disabled = false;
+                            analyzeBtn.textContent = 'ANALYZE';
+                            progressSection.style.display = 'none';
+                            return;
+                        }
+                        progressText.textContent = `Found ${urls.length} PDF files. Starting analysis...`;
+                    } catch (error) {
+                        alert(`Crawling failed: ${error.message}`);
+                        analyzeBtn.disabled = false;
+                        analyzeBtn.textContent = 'ANALYZE';
+                        progressSection.style.display = 'none';
+                        return;
+                    }
+                }
+
+                if (urls.length === 0) {
+                    alert('No valid URLs found');
+                    return;
+                }
+
+                await processBatch(urls);
+            });
+
+            async function crawlForPDFs(baseUrl) {
+                // Use a relative URL so the frontend works both locally and on Cloud Run.
+                const apiUrl = '/crawl';
+                
+                // First attempt: Try without JavaScript (faster)
+                progressText.textContent = 'Finding PDF forms on website (standard crawl)...';
+                
+                const baseCrawlOptions = {
+                    url: baseUrl,
+                    include_subpages: crawlSubpages.checked,
+                    max_depth: parseInt(maxDepth.value),
+                    enable_js: false
+                };
+                
+                let response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(baseCrawlOptions)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Crawling failed with status ${response.status}`);
+                }
+                
+                let result = await response.json();
+                let pdfUrls = result.pdf_urls || [];
+                
+                // If no PDFs found, automatically try with JavaScript enabled
+                if (pdfUrls.length === 0) {
+                    progressText.textContent = 'No PDFs found. Trying enhanced crawl with JavaScript rendering...';
+                    
+                    const jsCrawlOptions = {
+                        ...baseCrawlOptions,
+                        enable_js: true
+                    };
+                    
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsCrawlOptions)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`JavaScript crawling failed with status ${response.status}`);
+                    }
+                    
+                    result = await response.json();
+                    pdfUrls = result.pdf_urls || [];
+                }
+                
+                return pdfUrls;
+            }
+
+            async function processBatch(urls) {
+                allResults = [];
+                
+                // Setup UI
+                analyzeBtn.disabled = true;
+                analyzeBtn.textContent = 'ANALYZING...';
+                progressSection.style.display = 'block';
+                resultsContainer.innerHTML = '';
+                resultsDiv.style.display = 'block';
+                
+                if (urls.length > 1) {
+                    batchSummary.style.display = 'block';
+                }
+
+                let completed = 0;
+                let successful = 0;
+                let totalFields = 0;
+                let totalSignatures = 0;
+
+                // If more than one URL, use the batch analysis API to process them all at once.
+                if (urls.length > 1) {
+                    progressText.textContent = `Sending ${urls.length} PDFs for batch analysis...`;
+                    progressFill.style.width = '0%';
+                    try {
+                        const response = await fetch('/batch_analyze', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ urls: urls })
+                        });
+                        if (!response.ok) {
+                            throw new Error(`Batch analysis failed with status ${response.status}`);
+                        }
+                        const result = await response.json();
+                        const batchResults = result.results || [];
+                        allResults = batchResults;
+                        // Update totals and display each result
+                        batchResults.forEach((res, i) => {
+                            if (res.status !== 'error') {
+                                successful++;
+                                totalFields += res.field_count || 0;
+                                totalSignatures += (res.signature_analysis?.signature_count || 0);
+                            }
+                            displayResult(res, i);
+                        });
+                        completed = batchResults.length;
+                        // Update batch summary
+                        document.getElementById('total-analyzed').textContent = completed;
+                        document.getElementById('total-successful').textContent = successful;
+                        document.getElementById('total-fields').textContent = totalFields;
+                        document.getElementById('total-signatures').textContent = totalSignatures;
+                        progressText.textContent = `Batch analysis complete! (${completed}/${urls.length})`;
+                        progressFill.style.width = '100%';
+                    } catch (err) {
+                        alert(err.message);
+                        progressText.textContent = `Batch analysis failed: ${err.message}`;
+                    }
+                } else {
+                    // Single URL: process sequentially as before
+                    for (let i = 0; i < urls.length; i++) {
+                        const url = urls[i];
+                        progressText.textContent = `Processing ${url.substring(0, 50)}... (${i + 1}/${urls.length})`;
+                        progressFill.style.width = `${(i / urls.length) * 100}%`;
+                        try {
+                            const result = await analyzeUrl(url);
+                            result.status = 'success';
+                            allResults.push(result);
+                            successful++;
+                            totalFields += result.field_count || 0;
+                            totalSignatures += (result.signature_analysis?.signature_count || 0);
+                            displayResult(result, i);
+                        } catch (error) {
+                            const errorResult = {
+                                url: url,
+                                status: 'error',
+                                error: error.message
+                            };
+                            allResults.push(errorResult);
+                            displayResult(errorResult, i);
+                        }
+                        completed++;
+                        // Update batch summary for single mode (will be hidden anyway)
+                        if (urls.length > 1) {
+                            document.getElementById('total-analyzed').textContent = completed;
+                            document.getElementById('total-successful').textContent = successful;
+                            document.getElementById('total-fields').textContent = totalFields;
+                            document.getElementById('total-signatures').textContent = totalSignatures;
+                        }
+                    }
+                    progressText.textContent = `Analysis Complete! (${completed}/${urls.length})`;
+                    progressFill.style.width = '100%';
+                }
+
+                if (allResults.length > 0) {
+                    generateDownloads();
+                    downloadSection.style.display = 'block';
+                }
+
+                setTimeout(() => {
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.textContent = 'ANALYZE';
+                    progressSection.style.display = 'none';
+                }, 1000);
+            }
+
+            async function analyzeUrl(url) {
+                // Use a relative URL so the frontend works both locally and on Cloud Run.
+                const apiUrl = '/analyze';
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server responded with status ${response.status}`);
+                }
+                
+                return await response.json();
+            }
+            
+            function displayResult(result, index) {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result-item';
+                
+                if (result.status === 'success') {
+                    const sigAnalysis = result.signature_analysis || {};
+                    const createBadge = (value) => {
+                        return value === 'Yes' 
+                            ? `<span class="badge badge-yes">Yes</span>` 
+                            : `<span class="badge badge-no">No</span>`;
+                    };
+                    
+                    resultDiv.innerHTML = `
+                        <div class="result-header">
+                            <div class="result-url">${result.url}</div>
+                            <div class="result-status status-success">SUCCESS</div>
+                        </div>
+                        <div class="summary">
+                            <p><strong>Fields:</strong> ${result.field_count || 0} total (${result.text_fields || 0} text, ${result.checkboxes || 0} checkboxes)</p>
+                            <p><strong>Signatures:</strong> ${sigAnalysis.signature_count || 0} total (${sigAnalysis.conditional_signature_count || 0} conditional)</p>
+                            <p><strong>Witness Signatures:</strong> ${sigAnalysis.witness_signature_count || 0}</p>
+                            <p><strong>Special Requirements:</strong>
+                               Witnesses Required ${createBadge(result.witnesses_required || 'No')}
+                               Notarization Required ${createBadge(result.notarization_required || 'No')}
+                               Conditional Logic ${createBadge(result.conditional_logic || 'No')}
+                            </p>
+                        </div>
+                        <details>
+                            <summary>View Full JSON Data</summary>
+                            <pre class="output">${JSON.stringify(result, null, 2)}</pre>
+                        </details>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result-header">
+                            <div class="result-url">${result.url}</div>
+                            <div class="result-status status-error">ERROR</div>
+                        </div>
+                        <div class="summary">
+                            <p><strong>Error:</strong> ${result.error}</p>
+                        </div>
+                    `;
+                }
+                
+                resultsContainer.appendChild(resultDiv);
+            }
+
+            function generateDownloads() {
+                // Generate JSON download
+                const jsonStr = JSON.stringify(allResults, null, 2);
+                const jsonBlob = new Blob([jsonStr], { type: 'application/json' });
+                document.getElementById('json-download').href = URL.createObjectURL(jsonBlob);
+
+                // Generate basic CSV
+                let csvContent = 'url,status,field_count,text_fields,checkboxes,signatures,conditional_signatures,witness_signatures,witnesses_required,notarization_required,error\n';
+                
+                allResults.forEach(result => {
+                    const sigAnalysis = result.signature_analysis || {};
+                    csvContent += `"${result.url}","${result.status}",${result.field_count || 0},${result.text_fields || 0},${result.checkboxes || 0},`;
+                    csvContent += `${sigAnalysis.signature_count || 0},${sigAnalysis.conditional_signature_count || 0},${sigAnalysis.witness_signature_count || 0},`;
+                    csvContent += `"${result.witnesses_required || 'No'}","${result.notarization_required || 'No'}","${result.error || ''}"\n`;
+                });
+                
+                const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+                document.getElementById('csv-download').href = URL.createObjectURL(csvBlob);
+
+                // Generate detailed CSV with all data
+                let detailedCsv = 'url,status,field_count,text_fields,checkboxes,signatures,conditional_signatures,witness_signatures,witnesses_required,notarization_required,conditional_logic,full_json,error\n';
+                
+                allResults.forEach(result => {
+                    const sigAnalysis = result.signature_analysis || {};
+                    const fullJson = JSON.stringify(result).replace(/"/g, '""'); // Escape quotes for CSV
+                    detailedCsv += `"${result.url}","${result.status}",${result.field_count || 0},${result.text_fields || 0},${result.checkboxes || 0},`;
+                    detailedCsv += `${sigAnalysis.signature_count || 0},${sigAnalysis.conditional_signature_count || 0},${sigAnalysis.witness_signature_count || 0},`;
+                    detailedCsv += `"${result.witnesses_required || 'No'}","${result.notarization_required || 'No'}","${result.conditional_logic || 'No'}","${fullJson}","${result.error || ''}"\n`;
+                });
+                
+                const detailedCsvBlob = new Blob([detailedCsv], { type: 'text/csv' });
+                document.getElementById('detailed-csv').href = URL.createObjectURL(detailedCsvBlob);
+
+                // Make dashboard button visible
+                document.getElementById('html-dashboard').style.display = 'inline-block';
+            }
+
+           function generateDashboard() {
+                // Show loading state
+                loadingSpinner.style.display = 'block';
+                
+                try {
+                    // Open the dashboard in a new tab
+                    // Use a relative URL so the frontend works both locally and on Cloud Run.
+                    const dashboardUrl = '/dashboard';
+                    const previewWindow = window.open(dashboardUrl, '_blank');
+                    
+                    if (!previewWindow) {
+                        throw new Error("Popup was blocked. Please allow popups for this site to view the dashboard.");
+                    }
+                    
+                    // Add click handler in case the user needs to manually download
+                    const downloadBtn = document.createElement('a');
+                    downloadBtn.href = dashboardUrl;
+                    downloadBtn.textContent = "Dashboard";
+                    downloadBtn.style.display = 'none';
+                    downloadBtn.target = '_blank';
+                    document.body.appendChild(downloadBtn);
+                    
+                    // Remove after a short delay
+                    setTimeout(() => {
+                        document.body.removeChild(downloadBtn);
+                        // Hide loading spinner
+                        loadingSpinner.style.display = 'none';
+                    }, 1000);
+                } catch (error) {
+                    console.error('Dashboard generation failed:', error);
+                    alert(`Dashboard generation failed: ${error.message}`);
+                    loadingSpinner.style.display = 'none';
+                }
+            }
+
+            console.log('Frontend logic initialized');
+        } catch (e) {
+            console.error('Frontend initialization error:', e);
+        }
+    });
+    </script>
+    
+    <!-- Attribution -->
+    <div style="position: fixed; bottom: 8px; right: 12px; font-size: 10px; color: rgba(16, 185, 129, 0.15); font-family: 'Inter', sans-serif; letter-spacing: 0.5px; font-weight: 300; user-select: none; pointer-events: none; z-index: 1;">
+        A Meyer Interests Project
+    </div>
+</body>
+</html>
